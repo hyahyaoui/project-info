@@ -1,0 +1,31 @@
+plugins {
+    id 'java-gradle-plugin'
+    id 'maven-publish'
+}
+
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+group 'com.example'
+version '1.0.0-SNAPSHOT'
+
+
+dependencies {
+    gradleApi()
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.1'
+    implementation 'org.yaml:snakeyaml:2.0'
+
+}
+
+gradlePlugin {
+    plugins {
+        ProjectInfo {
+            id = 'com.example.project-artifacts-info'
+            implementationClass = 'com.example.ProjectArtifactsInfoPlugin'
+        }
+    }
+}
+
