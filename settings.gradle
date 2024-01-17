@@ -1,2 +1,4 @@
 rootProject.name = 'project-artifacts-info'
+include 'project-artifacts-info-starter'
+include 'project-artifact-info-plugin'
 

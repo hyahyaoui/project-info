@@ -3,28 +3,16 @@ plugins {
     id 'maven-publish'
 }
 
-group = 'com.example'
-version = '0.0.15-SNAPSHOT'
 
 repositories {
     mavenLocal()
     mavenCentral()
 }
 
-dependencies {
-    gradleApi()
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.1'
+group = 'com.example'
+version = '1.0.0-SNAPSHOT'
 
-}
 
-gradlePlugin {
-    plugins {
-        fileDiff {
-            id = 'com.example.project-artifacts-info'
-            implementationClass = 'com.example.ProjectArtifactsInfoPlugin'
-        }
-    }
-}
 
 
 test {

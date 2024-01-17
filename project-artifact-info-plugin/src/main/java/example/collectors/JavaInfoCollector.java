@@ -1,4 +1,4 @@
-package com.example.collectors;
+package example.collectors;
 
 import org.gradle.api.JavaVersion;
 import org.gradle.api.Project;
@@ -23,6 +23,5 @@ public class JavaInfoCollector implements ArtifactInfoCollectorFunction {
         public String getVersion() {
             return version;
         }
-
     }
 }
