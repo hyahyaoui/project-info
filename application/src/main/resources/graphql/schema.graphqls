@@ -1,0 +1,73 @@
+type ArtifactResult {
+    applicationName: String
+    environment: String
+    buildInformation: BuildInformation
+    kubernetesObjects: [KubernetesObject]
+}
+
+type BuildInformation {
+    gradleVersion: String
+    jenkinsImages: [ContainerImageInfo]
+    javaDependencies: [JavaDependency]
+    javaVersion: String
+}
+
+type ContainerImageInfo {
+    name: String
+    version: String
+    namespace: String
+}
+
+type JavaDependency {
+    groupId: String
+    artifactId: String
+    version: String
+}
+
+type KubernetesObject {
+    name: String
+    version: String
+}
+
+type Query {
+    searchArtifacts(criteria: ArtifactSearchCriteria, environment: String): [ArtifactResult]
+}
+
+input ArtifactSearchCriteria {
+    gradleVersion: Criteria
+    imageCriteria: ImageSearchCriteria
+    dependencyCriteria: DependencySearchCriteria
+    javaVersionCriteria: Criteria
+    kubernetesObjectCriteria: KubernetesObjectSearchCriteria
+}
+
+input ImageSearchCriteria {
+    name: String
+    version: Criteria
+    namespace: Criteria
+}
+
+input DependencySearchCriteria {
+    groupId: String
+    artifactId: String
+    version: Criteria
+}
+
+input Criteria {
+    value: String
+    comparison: ComparisonType
+}
+
+input KubernetesObjectSearchCriteria {
+    name: String
+    version: Criteria
+}
+
+enum ComparisonType {
+    EQUAL
+    NOT_EQUAL
+    GREATER_THAN
+    GREATER_THAN_OR_EQUAL
+    LESS_THAN
+    LESS_THAN_OR_EQUAL
+}

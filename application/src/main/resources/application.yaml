@@ -1,0 +1,37 @@
+
+app.environments:
+  - name: UAT
+    apps:
+      - name: App1
+        url: http://uat-artifact-service/app1
+      - name: App2
+        url: http://uat-artifact-service/app2
+      - name: App3
+        url: http://uat-artifact-service/app2
+
+  - name: QUALIFICATION
+    apps:
+      - name: App3-QUA
+        url: http://qualification-artifact-service/app3
+      - name: App4-QUA
+        url: http://qualification-artifact-service/app4
+
+  - name: PREPROD
+    apps:
+      - name: App5-PREPROD
+        url: http://preprod-artifact-service/app5
+      - name: App6
+        url: http://preprod-artifact-service/app6
+
+  - name: PROD
+    apps:
+      - name: App7-PROD
+        url: http://prod-artifact-service/app7
+      - name: App8
+        url: http://prod-artifact-service/app8
+
+
+spring:
+  graphql:
+    graphiql:
+      enabled: true
