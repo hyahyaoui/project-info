@@ -5,6 +5,16 @@ public class JavaDependency {
     private String artifactId;
     private String version;
 
+    public JavaDependency(String groupId) {
+        this.groupId = groupId;
+    }
+
+    public JavaDependency(String groupId, String artifactId, String version) {
+        this.groupId = groupId;
+        this.artifactId = artifactId;
+        this.version = version;
+    }
+
     public String getGroupId() {
         return groupId;
     }

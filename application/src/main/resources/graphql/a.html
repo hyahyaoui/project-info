@@ -1,0 +1,33 @@
+<!-- artifact-search.component.html -->
+<div class="artifact-search">
+    <h2>Artifact Search</h2>
+
+    <div class="search-form">
+        <form (ngSubmit)="searchArtifacts()">
+            <!-- Gradle Version Criteria -->
+            <div *ngFor="let gradleVersionCriteria of searchCriteria.gradleVersionCriteriaList; let i = index" class="criteria-group">
+                <label for="gradleVersion{{i}}">Gradle Version:</label>
+                <input type="text" id="gradleVersion{{i}}" [(ngModel)]="gradleVersionCriteria.value" />
+                <select id="comparison{{i}}" [(ngModel)]="gradleVersionCriteria.comparison">
+                    <option *ngFor="let type of comparisonTypes" [value]="type">{{ type }}</option>
+                </select>
+                <button type="button" (click)="removeCriteria(i, searchCriteria.gradleVersionCriteriaList)">Remove</button>
+            </div>
+            <button type="button" (click)="addCriteria(searchCriteria.gradleVersionCriteriaList)">Add Gradle Version Criteria</button>
+
+            <!-- Image Search Criteria -->
+            <!-- Similar logic as above for other criteria -->
+
+            <!-- Dependency Search Criteria -->
+            <!-- Similar logic as above for other criteria -->
+
+            <!-- Java Version Criteria -->
+            <!-- Similar logic as above for other criteria -->
+
+            <!-- Kubernetes Object Search Criteria -->
+            <!-- Similar logic as above for other criteria -->
+
+            <button type="submit">Search</button>
+        </form>
+    </div>
+</div>

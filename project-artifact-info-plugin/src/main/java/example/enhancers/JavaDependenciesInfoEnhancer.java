@@ -12,15 +12,18 @@ public class JavaDependenciesInfoEnhancer implements ArtifactInfoEnhancer {
     public void enhance(Project project, ApplicationArtifactsInfo applicationArtifactsInfo) {
         project.getConfigurations()
                 .getByName(RUNTIME_CLASSPATH_CONFIGURATION)
-                .getFiles().forEach(file -> {
-            String[] parts = file.getAbsolutePath().split("\\\\");
-            if (parts.length >= 5) {
-                String artifactId = parts[parts.length - 4];
-                String version = parts[parts.length - 3];
-                JavaDependency javaDependency = new JavaDependency();
-                //applicationArtifactsInfo.getBuildInformation().getJavaDependencies().put(javaDependency.);
-            }
-        });
+                .getResolvedConfiguration()
+                .getResolvedArtifacts().forEach(artifact -> {
+                    final String gav = artifact.getId().getComponentIdentifier().getDisplayName();
+                    final String[] gavArray = gav.split(":");
+                    if (gavArray.length >= 5) {
+                        String groupId = gavArray[0];
+                        String artifactId = gavArray[1];
+                        String version = gavArray[2];
+                        JavaDependency javaDependency = new JavaDependency(groupId, artifactId, version);
+                        applicationArtifactsInfo.getBuildInformation().getJavaDependencies().put(artifactId, javaDependency);
+                    }
+                });
 
         if (nextEnhancer != null) {
             nextEnhancer.enhance(project, applicationArtifactsInfo);

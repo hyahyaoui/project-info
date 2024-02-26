@@ -1,59 +1,51 @@
 package com.example.artifacts.inspector.model.search.input;
 
+import java.util.List;
+
 public class ArtifactSearchCriteria {
+    private List<Criteria> gradleVersionCriteriaList;
+    private List<ImageSearchCriteria> imageCriteriaList;
+    private List<DependencySearchCriteria> dependencyCriteriaList;
+    private List<Criteria> javaVersionCriteriaList;
+    private List<KubernetesObjectSearchCriteria> kubernetesObjectCriteriaList;
 
-    private Criteria versionTimestamp;
-    private Criteria gradleVersion;
-    private ImageSearchCriteria imageCriteria;
-    private DependencySearchCriteria DependencyCriteria;
-    private Criteria JavaVersionCriteria;
-    private KubernetesObjectSearchCriteria kubernetesObjectCriteria;
-
-    public Criteria getVersionTimestamp() {
-        return versionTimestamp;
+    public List<Criteria> getGradleVersionCriteriaList() {
+        return gradleVersionCriteriaList;
     }
 
-    public void setVersionTimestamp(Criteria versionTimestamp) {
-        this.versionTimestamp = versionTimestamp;
+    public void setGradleVersionCriteriaList(List<Criteria> gradleVersionCriteriaList) {
+        this.gradleVersionCriteriaList = gradleVersionCriteriaList;
     }
 
-    public Criteria getGradleVersion() {
-        return gradleVersion;
+    public List<ImageSearchCriteria> getImageCriteriaList() {
+        return imageCriteriaList;
     }
 
-    public void setGradleVersion(Criteria gradleVersion) {
-        this.gradleVersion = gradleVersion;
+    public void setImageCriteriaList(List<ImageSearchCriteria> imageCriteriaList) {
+        this.imageCriteriaList = imageCriteriaList;
     }
 
-    public ImageSearchCriteria getImageCriteria() {
-        return imageCriteria;
+    public List<DependencySearchCriteria> getDependencyCriteriaList() {
+        return dependencyCriteriaList;
     }
 
-    public void setImageCriteria(ImageSearchCriteria imageCriteria) {
-        this.imageCriteria = imageCriteria;
+    public void setDependencyCriteriaList(List<DependencySearchCriteria> dependencyCriteriaList) {
+        this.dependencyCriteriaList = dependencyCriteriaList;
     }
 
-    public DependencySearchCriteria getDependencyCriteria() {
-        return DependencyCriteria;
+    public List<Criteria> getJavaVersionCriteriaList() {
+        return javaVersionCriteriaList;
     }
 
-    public void setDependencyCriteria(DependencySearchCriteria dependencyCriteria) {
-        this.DependencyCriteria = dependencyCriteria;
+    public void setJavaVersionCriteriaList(List<Criteria> javaVersionCriteriaList) {
+        this.javaVersionCriteriaList = javaVersionCriteriaList;
     }
 
-    public Criteria getJavaVersionCriteria() {
-        return JavaVersionCriteria;
+    public List<KubernetesObjectSearchCriteria> getKubernetesObjectCriteriaList() {
+        return kubernetesObjectCriteriaList;
     }
 
-    public void setJavaVersionCriteria(Criteria javaVersionCriteria) {
-        this.JavaVersionCriteria = javaVersionCriteria;
-    }
-
-    public KubernetesObjectSearchCriteria getKubernetesObjectCriteria() {
-        return kubernetesObjectCriteria;
-    }
-
-    public void setKubernetesObjectCriteria(KubernetesObjectSearchCriteria kubernetesObjectCriteria) {
-        this.kubernetesObjectCriteria = kubernetesObjectCriteria;
+    public void setKubernetesObjectCriteriaList(List<KubernetesObjectSearchCriteria> kubernetesObjectCriteriaList) {
+        this.kubernetesObjectCriteriaList = kubernetesObjectCriteriaList;
     }
 }

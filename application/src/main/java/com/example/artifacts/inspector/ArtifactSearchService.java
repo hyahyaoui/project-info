@@ -21,9 +21,7 @@ public class ArtifactSearchService {
         this.environmentConfig = environmentConfig;
     }
 
-
-    public List<ArtifactResult> searchArtifacts(String environment,
-                                                ArtifactSearchCriteria criteria) {
+    public List<ArtifactResult> searchArtifacts(String environment, ArtifactSearchCriteria criteria) {
         return environmentConfig.getEnvironments().stream()
                 .filter(env -> env.getName().equalsIgnoreCase(environment))
                 .flatMap(env -> env.getApps().stream()
@@ -34,18 +32,70 @@ public class ArtifactSearchService {
     }
 
     private boolean criteriaMatch(ArtifactResult artifact, ArtifactSearchCriteria criteria) {
-        return criteriaMatch(artifact.getVersionTimestamp(), criteria.getVersionTimestamp())
-                && criteriaMatch(artifact.getBuildInformation().getGradleVersion(), criteria.getGradleVersion())
-                && imageNameCriteriaMatch(artifact.getBuildInformation().getJenkinsImages(), criteria.getImageCriteria())
-                && dependencyCriteriaMatch(artifact.getBuildInformation().getJavaDependencies(), criteria.getDependencyCriteria())
-                && criteriaMatch(artifact.getBuildInformation().getJavaVersion(), criteria.getJavaVersionCriteria())
-                && kubernetesObjectCriteriaMatch(artifact.getKubernetesObjects(), criteria.getKubernetesObjectCriteria());
+        return  criteriaMatch(artifact.getBuildInformation().getGradleVersion(), criteria.getGradleVersionCriteriaList())
+                && imageNameCriteriaMatch(artifact.getBuildInformation().getJenkinsImages(), criteria.getImageCriteriaList())
+                && dependencyCriteriaMatch(artifact.getBuildInformation().getJavaDependencies(), criteria.getDependencyCriteriaList())
+                && criteriaMatch(artifact.getBuildInformation().getJavaVersion(), criteria.getJavaVersionCriteriaList())
+                && kubernetesObjectCriteriaMatch(artifact.getKubernetesObjects(), criteria.getKubernetesObjectCriteriaList());
+    }
+
+    private boolean criteriaMatch(String fieldValue, List<Criteria> criteriaList) {
+        if (criteriaList == null || criteriaList.isEmpty()) {
+            return true;
+        }
+
+        return criteriaList.stream().anyMatch(criteria -> criteriaMatch(fieldValue, criteria));
+    }
+
+    private boolean imageNameCriteriaMatch(Map<String, ContainerImageInfo> images, List<ImageSearchCriteria> criteriaList) {
+        if (criteriaList == null || criteriaList.isEmpty()) {
+            return true;
+        }
+
+        for (ContainerImageInfo image : images.values()) {
+            if (criteriaList.stream()
+                    .anyMatch(criteria -> equalCriteriaMatch(image.getName(), criteria.getName())
+                            && criteriaMatch(image.getVersion(), criteria.getVersion())
+                            && criteriaMatch(image.getNamespace(), criteria.getNamespace()))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean dependencyCriteriaMatch(Map<String, JavaDependency> dependencies, List<DependencySearchCriteria> criteriaList) {
+        if (criteriaList == null || criteriaList.isEmpty()) {
+            return true;
+        }
+
+        for (JavaDependency dependency : dependencies.values()) {
+            if (criteriaList.stream()
+                    .anyMatch(criteria -> equalCriteriaMatch(dependency.getGroupId(), criteria.getGroupId())
+                            && equalCriteriaMatch(dependency.getArtifactId(), criteria.getArtifactId())
+                            && criteriaMatch(dependency.getVersion(), criteria.getVersion()))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean kubernetesObjectCriteriaMatch(List<KubernetesObject> kubernetesObjects, List<KubernetesObjectSearchCriteria> criteriaList) {
+        if (criteriaList == null || criteriaList.isEmpty()) {
+            return true;
+        }
+
+        for (KubernetesObject kubernetesObject : kubernetesObjects) {
+            if (criteriaList.stream()
+                    .anyMatch(criteria -> equalCriteriaMatch(kubernetesObject.getName(), criteria.getName())
+                            && criteriaMatch(kubernetesObject.getVersion(), criteria.getVersion()))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private boolean equalCriteriaMatch(String fieldValue, String criteria) {
-        if (criteria == null)
-            return true;
-        return criteria.equals(fieldValue);
+        return criteria == null || criteria.equals(fieldValue);
     }
 
     private boolean criteriaMatch(String fieldValue, Criteria criteria) {
@@ -67,55 +117,8 @@ public class ArtifactSearchService {
                 return false;
         }
     }
-
-    private boolean imageNameCriteriaMatch(Map<String, ContainerImageInfo> images, ImageSearchCriteria criteria) {
-        if (criteria == null) {
-            return true;
-        }
-
-        for (ContainerImageInfo image : images.values()) {
-            if (equalCriteriaMatch(image.getName(), criteria.getName())
-                    && criteriaMatch(image.getVersion(), criteria.getVersion())
-                    && criteriaMatch(image.getNamespace(), criteria.getNamespace())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean dependencyCriteriaMatch(Map<String, JavaDependency> dependencies, DependencySearchCriteria criteria) {
-        if (criteria == null) {
-            return true;
-        }
-
-        for (JavaDependency dependency : dependencies.values()) {
-            if (equalCriteriaMatch(dependency.getGroupId(), criteria.getGroupId())
-                    && equalCriteriaMatch(dependency.getArtifactId(), criteria.getArtifactId())
-                    && criteriaMatch(dependency.getVersion(), criteria.getVersion())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean kubernetesObjectCriteriaMatch(List<KubernetesObject> kubernetesObjects, KubernetesObjectSearchCriteria criteria) {
-        if (criteria == null) {
-            return true;
-        }
-
-        for (KubernetesObject kubernetesObject : kubernetesObjects) {
-            if (equalCriteriaMatch(kubernetesObject.getName(), criteria.getName())
-                    && criteriaMatch(kubernetesObject.getVersion(), criteria.getVersion())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     // Placeholder method to simulate fetching artifacts from an external service
     private List<ArtifactResult> fetchArtifacts(String appName) {
-
-
         return DummyDataGenerator.generateDummyData()
                 .stream().filter(app -> app.getApplicationName().equals(appName))
                 .collect(Collectors.toList());
