@@ -16,16 +16,61 @@
             <button type="button" (click)="addCriteria(searchCriteria.gradleVersionCriteriaList)">Add Gradle Version Criteria</button>
 
             <!-- Image Search Criteria -->
-            <!-- Similar logic as above for other criteria -->
+            <div *ngFor="let imageCriteria of searchCriteria.imageCriteriaList; let i = index" class="criteria-group">
+                <label for="imageName{{i}}">Image Name:</label>
+                <input type="text" id="imageName{{i}}" [(ngModel)]="imageCriteria.name" />
+                <label for="imageVersion{{i}}">Image Version:</label>
+                <input type="text" id="imageVersion{{i}}" [(ngModel)]="imageCriteria.version.value" />
+                <select id="comparison{{i}}" [(ngModel)]="imageCriteria.version.comparison">
+                    <option *ngFor="let type of comparisonTypes" [value]="type">{{ type }}</option>
+                </select>
+                <label for="imageNamespace{{i}}">Image Namespace:</label>
+                <input type="text" id="imageNamespace{{i}}" [(ngModel)]="imageCriteria.namespace.value" />
+                <select id="comparison{{i}}" [(ngModel)]="imageCriteria.namespace.comparison">
+                    <option *ngFor="let type of comparisonTypes" [value]="type">{{ type }}</option>
+                </select>
+                <button type="button" (click)="removeCriteria(i, searchCriteria.imageCriteriaList)">Remove</button>
+            </div>
+            <button type="button" (click)="addCriteria(searchCriteria.imageCriteriaList)">Add Image Criteria</button>
 
             <!-- Dependency Search Criteria -->
-            <!-- Similar logic as above for other criteria -->
+            <div *ngFor="let dependencyCriteria of searchCriteria.dependencyCriteriaList; let i = index" class="criteria-group">
+                <label for="groupId{{i}}">Group ID:</label>
+                <input type="text" id="groupId{{i}}" [(ngModel)]="dependencyCriteria.groupId" />
+                <label for="artifactId{{i}}">Artifact ID:</label>
+                <input type="text" id="artifactId{{i}}" [(ngModel)]="dependencyCriteria.artifactId" />
+                <label for="dependencyVersion{{i}}">Dependency Version:</label>
+                <input type="text" id="dependencyVersion{{i}}" [(ngModel)]="dependencyCriteria.version.value" />
+                <select id="comparison{{i}}" [(ngModel)]="dependencyCriteria.version.comparison">
+                    <option *ngFor="let type of comparisonTypes" [value]="type">{{ type }}</option>
+                </select>
+                <button type="button" (click)="removeCriteria(i, searchCriteria.dependencyCriteriaList)">Remove</button>
+            </div>
+            <button type="button" (click)="addCriteria(searchCriteria.dependencyCriteriaList)">Add Dependency Criteria</button>
 
             <!-- Java Version Criteria -->
-            <!-- Similar logic as above for other criteria -->
+            <div *ngFor="let javaVersionCriteria of searchCriteria.javaVersionCriteriaList; let i = index" class="criteria-group">
+                <label for="javaVersion{{i}}">Java Version:</label>
+                <input type="text" id="javaVersion{{i}}" [(ngModel)]="javaVersionCriteria.value" />
+                <select id="comparison{{i}}" [(ngModel)]="javaVersionCriteria.comparison">
+                    <option *ngFor="let type of comparisonTypes" [value]="type">{{ type }}</option>
+                </select>
+                <button type="button" (click)="removeCriteria(i, searchCriteria.javaVersionCriteriaList)">Remove</button>
+            </div>
+            <button type="button" (click)="addCriteria(searchCriteria.javaVersionCriteriaList)">Add Java Version Criteria</button>
 
             <!-- Kubernetes Object Search Criteria -->
-            <!-- Similar logic as above for other criteria -->
+            <div *ngFor="let kubernetesObjectCriteria of searchCriteria.kubernetesObjectCriteriaList; let i = index" class="criteria-group">
+                <label for="kubernetesObjectName{{i}}">Kubernetes Object Name:</label>
+                <input type="text" id="kubernetesObjectName{{i}}" [(ngModel)]="kubernetesObjectCriteria.name" />
+                <label for="kubernetesObjectVersion{{i}}">Kubernetes Object Version:</label>
+                <input type="text" id="kubernetesObjectVersion{{i}}" [(ngModel)]="kubernetesObjectCriteria.version.value" />
+                <select id="comparison{{i}}" [(ngModel)]="kubernetesObjectCriteria.version.comparison">
+                    <option *ngFor="let type of comparisonTypes" [value]="type">{{ type }}</option>
+                </select>
+                <button type="button" (click)="removeCriteria(i, searchCriteria.kubernetesObjectCriteriaList)">Remove</button>
+            </div>
+            <button type="button" (click)="addCriteria(searchCriteria.kubernetesObjectCriteriaList)">Add Kubernetes Object Criteria</button>
 
             <button type="submit">Search</button>
         </form>

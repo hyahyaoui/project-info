@@ -4,18 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="58922dd6-1e86-437e-aeb3-7c68a2d8a4cf" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/application/src/main/resources/graphql/ArtifactSearchComponent.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/application/src/main/resources/graphql/Criteria.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/application/src/main/resources/graphql/a.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/project-artifact-info-plugin/src/test/java/example/enhancers/JavaDependenciesInfoEnhancerTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+    <list default="true" id="58922dd6-1e86-437e-aeb3-7c68a2d8a4cf" name="Changes" comment="front">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/src/main/java/com/example/artifacts/inspector/ArtifactSearchService.java" beforeDir="false" afterPath="$PROJECT_DIR$/application/src/main/java/com/example/artifacts/inspector/ArtifactSearchService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/src/main/java/com/example/artifacts/inspector/model/search/input/ArtifactSearchCriteria.java" beforeDir="false" afterPath="$PROJECT_DIR$/application/src/main/java/com/example/artifacts/inspector/model/search/input/ArtifactSearchCriteria.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/src/main/resources/graphql/schema.graphqls" beforeDir="false" afterPath="$PROJECT_DIR$/application/src/main/resources/graphql/schema.graphqls" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project-artifact-info-plugin/src/main/java/example/enhancers/JavaDependenciesInfoEnhancer.java" beforeDir="false" afterPath="$PROJECT_DIR$/project-artifact-info-plugin/src/main/java/example/enhancers/JavaDependenciesInfoEnhancer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project-artifacts-common/src/main/java/com/example/artifacts/inspector/commons/model/JavaDependency.java" beforeDir="false" afterPath="$PROJECT_DIR$/project-artifacts-common/src/main/java/com/example/artifacts/inspector/commons/model/JavaDependency.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/src/main/resources/graphql/ArtifactSearchComponent.java" beforeDir="false" afterPath="$PROJECT_DIR$/application/src/main/resources/graphql/ArtifactSearchComponent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/src/main/resources/graphql/a.html" beforeDir="false" afterPath="$PROJECT_DIR$/application/src/main/resources/graphql/a.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -260,7 +252,7 @@
       <updated>1704713742417</updated>
       <workItem from="1704713745778" duration="36934000" />
       <workItem from="1707330384675" duration="36420000" />
-      <workItem from="1708003803701" duration="31176000" />
+      <workItem from="1708003803701" duration="31828000" />
     </task>
     <task id="LOCAL-00001" summary="plugin">
       <created>1704789496307</created>
@@ -297,7 +289,14 @@
       <option name="project" value="LOCAL" />
       <updated>1708161657763</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="front">
+      <created>1708941214258</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1708941214258</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -319,7 +318,8 @@
     <MESSAGE value="starter" />
     <MESSAGE value="plugin" />
     <MESSAGE value="application" />
-    <option name="LAST_COMMIT_MESSAGE" value="application" />
+    <MESSAGE value="front" />
+    <option name="LAST_COMMIT_MESSAGE" value="front" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

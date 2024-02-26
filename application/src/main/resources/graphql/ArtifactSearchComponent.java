@@ -1,21 +1,21 @@
-package graphql;// artifact-search.component.ts
+// artifact-search.component.ts
 import { Component } from '@angular/core';
 import { Apollo } from 'apollo-angular';
 import {
-  Query,
-  ArtifactSearchCriteria,
-  Criteria,
-  ImageSearchCriteria,
-  DependencySearchCriteria,
-  KubernetesObjectSearchCriteria,
-  ComparisonType,
-} from './types';
+        Query,
+        ArtifactSearchCriteria,
+        Criteria,
+        ImageSearchCriteria,
+        DependencySearchCriteria,
+        KubernetesObjectSearchCriteria,
+        ComparisonType,
+        } from './types';
 
 @Component({
-  selector: 'app-artifact-search',
-  templateUrl: './artifact-search.component.html',
-  styleUrls: ['./artifact-search.component.scss'],
-})
+        selector: 'app-artifact-search',
+        templateUrl: './artifact-search.component.html',
+        styleUrls: ['./artifact-search.component.scss'],
+        })
 export class ArtifactSearchComponent {
   searchCriteria: ArtifactSearchCriteria = {
     gradleVersionCriteriaList: [new Criteria()],
@@ -47,15 +47,15 @@ export class ArtifactSearchComponent {
     const criteria: ArtifactSearchCriteria = { ...this.searchCriteria };
 
     this.apollo
-      .watchQuery<Query>({
-        query: YOUR_GRAPHQL_QUERY,
-        variables: {
-          criteria: criteria,
-          environment: 'your_environment',
-        },
+            .watchQuery<Query>({
+            query: YOUR_GRAPHQL_QUERY,
+            variables: {
+      criteria: criteria,
+              environment: 'your_environment',
+    },
       })
       .valueChanges.subscribe(({ data }) => {
-        // Handle the response as needed
-      });
+            // Handle the response as needed
+    });
   }
 }
