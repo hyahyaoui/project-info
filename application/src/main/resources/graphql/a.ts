@@ -1,159 +1,65 @@
-import { Component } from '@angular/core';
-import { Apollo } from 'apollo-angular';
-import {
-ArtifactSearchCriteria,
-CiImageSearchCriteria,
-Criteria,
-JavaDependencySearchCriteria,
-KubernetesObjectSearchCriteria,
-} from 'path-to-your-models';
+// artifact-search.component.ts
+
+import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
-selector: 'app-artifact-search',
-templateUrl: './artifacts-search.component.html',
-styleUrls: ['./artifacts-search.component.scss'],
+    selector: 'app-artifact-search',
+    templateUrl: './artifact-search.component.html',
+    styleUrls: ['./artifact-search.component.css']
 })
-export class ArtifactsSearchComponent {
-query = '';
-environment = 'UAT';
+export class ArtifactSearchComponent implements OnInit {
 
-searchCriteria: ArtifactSearchCriteria = {
-gradleVersionCriteriaList: [new Criteria()],
-ciImageCriteriaList: [new CiImageSearchCriteria()],
-javaDependenciesCriteriaList: [new JavaDependencySearchCriteria()],
-javaVersionCriteriaList: [new Criteria()],
-kubernetesObjectCriteriaList: [new KubernetesObjectSearchCriteria()],
-};
+    result: any; // You can define a specific type for the result based on your GraphQL schema
 
-comparisonTypes = Object.values(ComparisonType);
+    constructor(private http: HttpClient) { }
 
-constructor(private apollo: Apollo) {}
+    ngOnInit(): void {
+        this.executeGraphQLQuery();
+    }
 
-addCriteria(criteriaList: any[]) {
-criteriaList.push(this.createEmptyCriteria(criteriaList[0]));
-}
+    executeGraphQLQuery(): void {
+        const query = `
+      query SearchArtifacts($environment: String!, $criteria: ArtifactSearchCriteria!) {
+        searchArtifacts(environment: $environment, criteria: $criteria) {
+          applicationName
+          environment
+          buildInformation {
+            gradleVersion
+            jenkinsImages {
+              name
+              version
+              namespace
+            }
+            javaDependencies {
+              groupId
+              artifactId
+              version
+            }
+            javaVersion
+          }
+          kubernetesObjects {
+            name
+            version
+          }
+        }
+      }
+    `;
 
-removeCriteria(index: number, criteriaList: any[]) {
-criteriaList.splice(index, 1);
-}
+        const variables = {
+            environment: 'YourEnvironment', // Set your environment
+            criteria: {
+                gradleVersionCriteriaList: [{ value: 'YourGradleVersion', comparison: ComparisonType.EQUAL }],
+                // ... Other criteria here
+            }
+        };
 
-createEmptyCriteria(template: any): any {
-return {};
-}
+        const url = 'YourGraphQLServerURL'; // Set your GraphQL server URL
 
-show() {
-this.cleanCriteria();
-}
-
-cleanCriteria() {
-const builtCriteria = { ...this.searchCriteria };
-
-// Clean criteria for each field
-builtCriteria.gradleVersionCriteriaList = this.cleanCriteriaList(builtCriteria.gradleVersionCriteriaList);
-builtCriteria.ciImageCriteriaList = this.cleanCiImageCriteria(builtCriteria.ciImageCriteriaList);
-builtCriteria.javaDependenciesCriteriaList = this.cleanJavaDependenciesCriteria(builtCriteria.javaDependenciesCriteriaList);
-builtCriteria.kubernetesObjectCriteriaList = this.cleanKubernetesObjectCriteriaList(
-builtCriteria.kubernetesObjectCriteriaList
-);
-builtCriteria.javaVersionCriteriaList = this.cleanCriteriaList(builtCriteria.javaVersionCriteriaList);
-
-// Remove empty criteria fields
-Object.keys(builtCriteria).forEach((key) => {
-if (!builtCriteria[key] || builtCriteria[key].length === 0) {
-delete builtCriteria[key];
-}
-});
-
-// Construct GraphQL query
-this.query = this.constructGraphQLQuery(builtCriteria);
-console.log(this.query);
-
-// Execute GraphQL query
-this.apollo
-.query({
-query: // Your GraphQL query here,
-})
-.subscribe((result) => {
-// Handle the result as needed
-console.log(result);
-});
-}
-
-constructGraphQLQuery(criteria: any): string {
-const queryFields = [
-'applicationName',
-'environment',
-...this.includeBuildInformation(criteria.gradleVersionCriteriaList, criteria.javaVersionCriteriaList),
-...this.includeJenkinsImages(criteria.ciImageCriteriaList),
-...this.includeJavaDependencies(criteria.javaDependenciesCriteriaList),
-...this.includeKubernetesObjects(criteria.kubernetesObjectCriteriaList),
-].filter(Boolean);
-
-return `searchArtifacts(environment: "${this.environment}", criteria: ${JSON.stringify(criteria)}) { ${queryFields.join(' ')} }`;
-}
-
-includeBuildInformation(gradleVersionCriteriaList: any[], javaVersionCriteriaList: any[]): string[] {
-const buildInformationFields = ['gradleVersion', 'javaVersion'];
-const includedFields: string[] = [];
-
-if (gradleVersionCriteriaList.length > 0) {
-includedFields.push('buildInformation { ' + buildInformationFields.join(' ') + ' }');
-}
-
-if (javaVersionCriteriaList.length > 0) {
-includedFields.push('buildInformation { ' + buildInformationFields.join(' ') + ' }');
-}
-
-return includedFields;
-}
-
-includeJenkinsImages(ciImageCriteriaList: any[]): string[] {
-return ciImageCriteriaList.length > 0 ? ['buildInformation { jenkinsImages { name version namespace } }'] : [];
-}
-
-includeJavaDependencies(javaDependenciesCriteriaList: any[]): string[] {
-return javaDependenciesCriteriaList.length > 0 ? ['buildInformation { javaDependencies { groupId artifactId version } }'] : [];
-}
-
-includeKubernetesObjects(kubernetesObjectCriteriaList: any[]): string[] {
-return kubernetesObjectCriteriaList.length > 0 ? ['kubernetesObjects { name version }'] : [];
-}
-
-cleanCriteriaList(criteriaList: any[]): any[] {
-return criteriaList.filter((criteria) => !!criteria.value);
-}
-
-cleanCiImageCriteria(ciImageCriteriaList: CiImageSearchCriteria[]): CiImageSearchCriteria[] {
-return ciImageCriteriaList.filter(
-(ciImageSearchCriteria) =>
-!!ciImageSearchCriteria.name || !!ciImageSearchCriteria.namespace.value || !!ciImageSearchCriteria.version.value
-);
-}
-
-cleanJavaDependenciesCriteria(
-javaDependenciesCriteriaList: JavaDependencySearchCriteria[]
-): JavaDependencySearchCriteria[] {
-return javaDependenciesCriteriaList.filter(
-(javaDependencySearchCriteria) =>
-!!javaDependencySearchCriteria.groupId || !!javaDependencySearchCriteria.artifactId
-);
-}
-
-cleanKubernetesObjectCriteriaList(
-kubernetesObjectCriteriaList: KubernetesObjectSearchCriteria[]
-): KubernetesObjectSearchCriteria[] {
-return kubernetesObjectCriteriaList.filter(
-(kubernetesObjectSearchCriteria) =>
-!!kubernetesObjectSearchCriteria.name || !!kubernetesObjectSearchCriteria.version.value
-);
-}
-}
-
-enum ComparisonType {
-EQUAL = 'EQUAL',
-NOT_EQUAL = 'NOT_EQUAL',
-GREATER_THAN = 'GREATER_THAN',
-GREATER_THAN_OR_EQUAL = 'GREATER_THAN_OR_EQUAL',
-LESS_THAN = 'LESS_THAN',
-LESS_THAN_OR_EQUAL = 'LESS_THAN_OR_EQUAL',
+        this.http.post(url, { query, variables })
+            .subscribe(response => {
+                this.result = response['data'];
+                console.log(this.result);
+            });
+    }
 }
