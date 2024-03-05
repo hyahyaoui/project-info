@@ -48,4 +48,83 @@ public class ArtifactsInformationEndpointAutoConfigure {
         }
     }
 
+
+
+    private static void addK8sObjects (Path path, ApplicationArtifactsInfo applicationArtifactsInfo)
+
+    BufferedReader input = new BufferedReader(new InputStreamReader(new FileInputStream path tofile()); BufferedReader String line;
+/*
+    File may contain multiple khubernates objects
+
+    Example:
+
+    apiVersion: autoscaling/v2
+
+    kind: Horizontal PodAutoscaler
+
+    spec:
+
+    scalaTargetRef
+
+    apiVersion: apps/vi
+
+    kind: Deployment
+
+    and may also contain multiple version for Kubernetes Object depending on some condition
+
+    ره
+
+            Example
+
+11-st semvarCompare spiVersion: networking #s.io/vl
+
+1.15-0 Capabilities. FubeVersion, GitVersion -
+
+            else if semvexCompare "1.14-0" Capabilities. KubeVersion. GitVersion -11
+
+    spiVersion: networking, klu.so/vibetal
+
+else -1)
+
+    apiVersson extensions/Vibetal
+
+1 and 11
+
+    kind: Ingres
+
+    We have to stop at the first object and its possivle versions
+*/
+    String stopAt ="";
+
+    String kind ="";
+
+
+            while ((Line Input readLine() in muli 44 iane, indexOf (stopAt)-1)(
+
+
+    if(line.tolowerCase()).indexOf("kind")>-1) {
+
+    stopkt stopât null ? "kind" stopAt kind line strip!).split("").
+
+            (Line toloverCase() indexOf("apiVersion")-11
+
+    stopke stopat mollapiVersion stopas Steing version lane stripil split("") (1)
+
+    KubernatesObjecs kubernetesObject new RubeznatasObject())
+
+            kubernetesObject.setVersion(version):
+
+    applicationAstifartsInfo getubernetesObjects).add(ubernatesObject)
+
+    String finalKind kind.
+
+            applicationArtifactsInfo.getKubernetesbjects()
+
+    SEEWAN) forEach (Buberneteshject( kubernetesObject setifame (finalKind),
+
+    Input cl
+
+    rasch (Exception
+
+                   ex printsackTrace()
 }

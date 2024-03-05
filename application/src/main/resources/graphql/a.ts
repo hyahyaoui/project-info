@@ -1,65 +1,27 @@
-// artifact-search.component.ts
+private static void addK8sObjects(Path path, ApplicationArtifactsInfo applicationArtifactsInfo) {
+    try (BufferedReader input = new BufferedReader(new InputStreamReader(new FileInputStream(path.toFile())))) {
+        String line;
+        String stopAt = null;
+        String kind = null;
 
-import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-
-@Component({
-    selector: 'app-artifact-search',
-    templateUrl: './artifact-search.component.html',
-    styleUrls: ['./artifact-search.component.css']
-})
-export class ArtifactSearchComponent implements OnInit {
-
-    result: any; // You can define a specific type for the result based on your GraphQL schema
-
-    constructor(private http: HttpClient) { }
-
-    ngOnInit(): void {
-        this.executeGraphQLQuery();
-    }
-
-    executeGraphQLQuery(): void {
-        const query = `
-      query SearchArtifacts($environment: String!, $criteria: ArtifactSearchCriteria!) {
-        searchArtifacts(environment: $environment, criteria: $criteria) {
-          applicationName
-          environment
-          buildInformation {
-            gradleVersion
-            jenkinsImages {
-              name
-              version
-              namespace
+        while ((line = input.readLine()) != null && (stopAt == null || line.indexOf(stopAt) == -1)) {
+            if (line.toLowerCase().contains("kind")) {
+                stopAt = (stopAt == null) ? "kind" : stopAt;
+                kind = line.strip().split(":")[1].trim();
             }
-            javaDependencies {
-              groupId
-              artifactId
-              version
+
+            if (line.toLowerCase().contains("apiversion")) {
+                stopAt = (stopAt == null) ? "apiversion" : stopAt;
+                String version = line.strip().split(":")[1].trim();
+
+                KubernetesObject kubernetesObject = new KubernetesObject();
+                kubernetesObject.setVersion(version);
+                applicationArtifactsInfo.getKubernetesObjects().add(kubernetesObject);
             }
-            javaVersion
-          }
-          kubernetesObjects {
-            name
-            version
-          }
         }
-      }
-    `;
 
-        const variables = {
-            environment: 'YourEnvironment', // Set your environment
-            criteria: {
-                gradleVersionCriteriaList: [{ value: 'YourGradleVersion', comparison: ComparisonType.EQUAL }],
-                // ... Other criteria here
-            }
-        };
-
-        const url = 'YourGraphQLServerURL'; // Set your GraphQL server URL
-
-        this.http.post(url, { query, variables })
-            .subscribe(response => {
-                this.result = response['data'];
-                console.log(this.result);
-            });
+        applicationArtifactsInfo.getKubernetesObjects().forEach(kubernetesObject -> kubernetesObject.setName(kind));
+    } catch (IOException e) {
+        e.printStackTrace();
     }
 }

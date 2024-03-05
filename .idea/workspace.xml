@@ -4,10 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="58922dd6-1e86-437e-aeb3-7c68a2d8a4cf" name="Changes" comment="front">
+    <list default="true" id="58922dd6-1e86-437e-aeb3-7c68a2d8a4cf" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/src/main/resources/graphql/ArtifactSearchComponent.java" beforeDir="false" afterPath="$PROJECT_DIR$/application/src/main/resources/graphql/ArtifactSearchComponent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/application/src/main/resources/graphql/a.html" beforeDir="false" afterPath="$PROJECT_DIR$/application/src/main/resources/graphql/a.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/src/main/resources/graphql/a.ts" beforeDir="false" afterPath="$PROJECT_DIR$/application/src/main/resources/graphql/a.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project-artifacts-info-starter/src/main/java/ArtifactsInformationEndpointAutoConfigure.java" beforeDir="false" afterPath="$PROJECT_DIR$/project-artifacts-info-starter/src/main/java/ArtifactsInformationEndpointAutoConfigure.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -80,7 +80,8 @@
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
-    "spring.configuration.checksum": "fa2b7115ee8957f9ba224e7180558399"
+    "spring.configuration.checksum": "fa2b7115ee8957f9ba224e7180558399",
+    "ts.external.directory.path": "C:\\Program Files\\JetBrains\\IntelliJ IDEA 2022.1.2\\plugins\\JavaScriptLanguage\\jsLanguageServicesImpl\\external"
   },
   "keyToStringList": {
     "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
@@ -252,7 +253,8 @@
       <updated>1704713742417</updated>
       <workItem from="1704713745778" duration="36934000" />
       <workItem from="1707330384675" duration="36420000" />
-      <workItem from="1708003803701" duration="31828000" />
+      <workItem from="1708003803701" duration="32777000" />
+      <workItem from="1709204202457" duration="2865000" />
     </task>
     <task id="LOCAL-00001" summary="plugin">
       <created>1704789496307</created>
@@ -296,7 +298,28 @@
       <option name="project" value="LOCAL" />
       <updated>1708941214258</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="front">
+      <created>1708942373208</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1708942373208</updated>
+    </task>
+    <task id="LOCAL-00008" summary="front">
+      <created>1709204257462</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1709204257462</updated>
+    </task>
+    <task id="LOCAL-00009" summary="front">
+      <created>1709213689265</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1709213689265</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
