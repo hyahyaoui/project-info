@@ -1,0 +1,242 @@
+package com.example.demo.domain;
+
+import java.time.LocalDate;
+
+/**
+ * Represents a certificate managed by the application.
+ */
+public class AppCertificate {
+    private final String vaultPath;
+    private final String vaultKey;
+    private final LocalDate expiryDate;
+
+    public AppCertificate(String vaultPath, String vaultKey, LocalDate expiryDate) {
+        this.vaultPath = vaultPath;
+        this.vaultKey = vaultKey;
+        this.expiryDate = expiryDate;
+    }
+
+    public String getVaultPath() {
+        return vaultPath;
+    }
+
+    public String getVaultKey() {
+        return vaultKey;
+    }
+
+    public LocalDate getExpiryDate() {
+        return expiryDate;
+    }
+}
+
+
+package com.example.demo.domain;
+
+/**
+ * Represents the status of a certificate.
+ */
+public enum AppCertificateStatus {
+    VALID,
+    EXPIRE_SOON,
+    EXPIRED
+}
+
+
+package com.example.demo.application;
+
+import com.example.demo.domain.AppCertificate;
+import com.example.demo.domain.AppCertificateStatus;
+import com.example.demo.infrastructure.VaultClient;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static java.time.temporal.ChronoUnit.DAYS;
+
+/**
+ * Service to handle certificate processing logic.
+ */
+@Service
+public class CertificateService {
+    private final VaultClient vaultClient;
+
+    public CertificateService(VaultClient vaultClient) {
+        this.vaultClient = vaultClient;
+    }
+
+    /**
+     * Retrieves certificates with a status of EXPIRED or EXPIRE_SOON.
+     *
+     * @param daysThreshold the number of days to consider a certificate as expiring soon.
+     * @return List of certificates that are expired or expiring soon.
+     */
+    public List<AppCertificate> getExpiringCertificates(int daysThreshold) {
+        List<AppCertificate> certificates = vaultClient.getAppCertificates();
+        return certificates.stream()
+                .filter(cert -> {
+                    AppCertificateStatus status = computeCertificateStatus(cert, daysThreshold);
+                    return status == AppCertificateStatus.EXPIRE_SOON || status == AppCertificateStatus.EXPIRED;
+                })
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Computes the status of a given certificate.
+     *
+     * @param certificate   the certificate to evaluate.
+     * @param daysThreshold the threshold for "expiring soon" status.
+     * @return The computed status of the certificate.
+     */
+    public AppCertificateStatus computeCertificateStatus(AppCertificate certificate, int daysThreshold) {
+        LocalDate now = LocalDate.now();
+        long daysToExpire = DAYS.between(now, certificate.getExpiryDate());
+
+        if (daysToExpire <= 0) {
+            return AppCertificateStatus.EXPIRED;
+        } else if (daysToExpire <= daysThreshold) {
+            return AppCertificateStatus.EXPIRE_SOON;
+        }
+        return AppCertificateStatus.VALID;
+    }
+}
+
+package com.example.demo.infrastructure;
+
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.stereotype.Service;
+
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import java.util.List;
+
+/**
+ * Service to send email notifications.
+ */
+@Service
+public class EmailNotificationService {
+    private final JavaMailSender mailSender;
+
+    public EmailNotificationService(JavaMailSender mailSender) {
+        this.mailSender = mailSender;
+    }
+
+    /**
+     * Sends an email notification with the details of expiring certificates.
+     *
+     * @param recipients the list of email recipients.
+     * @param subject    the email subject.
+     * @param body       the email body content.
+     */
+    public void sendEmail(List<String> recipients, String subject, String body) {
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            helper.setTo(recipients.toArray(new String[0]));
+            helper.setSubject(subject);
+            helper.setText(body, true);
+            mailSender.send(message);
+        } catch (MessagingException e) {
+            throw new RuntimeException("Failed to send email notification", e);
+        }
+    }
+}
+
+
+package com.example.demo.web;
+
+import com.example.demo.application.CertificateService;
+import com.example.demo.domain.AppCertificate;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.io.ByteArrayOutputStream;
+import java.util.List;
+
+/**
+ * REST Controller to provide endpoints for managing certificates.
+ */
+@RestController
+public class ReportController {
+    private final CertificateService certificateService;
+
+    public ReportController(CertificateService certificateService) {
+        this.certificateService = certificateService;
+    }
+
+    /**
+     * Endpoint to download certificates and their statuses as an Excel report.
+     *
+     * @return ResponseEntity containing the Excel file.
+     */
+    @GetMapping("/certificates/report")
+    public ResponseEntity<byte[]> downloadReport() {
+        try (Workbook workbook = new XSSFWorkbook()) {
+            Sheet sheet = workbook.createSheet("Certificates Report");
+
+            // Header
+            Row header = sheet.createRow(0);
+            header.createCell(0).setCellValue("Vault Path");
+            header.createCell(1).setCellValue("Vault Key");
+            header.createCell(2).setCellValue("Expiry Date");
+            header.createCell(3).setCellValue("Status");
+
+            // Populate data
+            List<AppCertificate> certificates = certificateService.getAllCertificatesSorted();
+            int rowNum = 1;
+            for (AppCertificate cert : certificates) {
+                Row row = sheet.createRow(rowNum++);
+                row.createCell(0).setCellValue(cert.getVaultPath());
+                row.createCell(1).setCellValue(cert.getVaultKey());
+                row.createCell(2).setCellValue(cert.getExpiryDate().toString());
+                row.createCell(3).setCellValue(certificateService.computeCertificateStatus(cert, 30).name());
+            }
+
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            workbook.write(outputStream);
+            byte[] excelBytes = outputStream.toByteArray();
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=certificates-report.xlsx")
+                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                    .body(excelBytes);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to generate Excel report", e);
+        }
+    }
+}
+
+package com.example.demo.configuration;
+
+import com.example.demo.application.NotificationFacade;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+
+/**
+ * Scheduler to periodically check and notify about expiring certificates.
+ */
+@Component
+public class CertificateScheduler {
+    private final NotificationFacade notificationFacade;
+
+    public CertificateScheduler(NotificationFacade notificationFacade) {
+        this.notificationFacade = notificationFacade;
+    }
+
+    /**
+     * Scheduled task to scan for expiring certificates every 24 hours.
+     */
+    @Scheduled(cron = "0 0 0 * * ?") // At midnight every day
+    public void scanCertificates() {
+        notificationFacade.checkAndNotify(30); // Notify for certificates expiring within 30 days
+    }
+}
